@@ -36,4 +36,4 @@ vignettes/*.pdf
 *.knit.md
 
 # my notes:
-*.txt
+paths.txt

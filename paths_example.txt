@@ -1,0 +1,5 @@
+# Path to folder with datasets
+RAW<-C:/.../data_area
+
+# Path to validation programs
+PROGRAM<-C:/.../program

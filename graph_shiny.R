@@ -1,19 +1,27 @@
 library("rlist")
 library("purrr")
 library("stringr")
-#library("dplyr")
 
-NotDomain <- c("SDTM", "VAL", "WORK")
+# -------------------- read in the .txt file with paths --------------------------
+assign_paths <- function(phrase, fileName){
 
-path_raw <- 'X:/SASDATA/Entimice_Contingency/root/cdar/d518/d5180c00009/ar/bdr2/raw/dev/data/data_area'
-path <- 'X:/SASDATA/Entimice_Contingency/root/cdar/d518/d5180c00009/ar/bdr2/sdtm/work_val/program/'
-
-
-path_file <- paste(getwd(),"/paths.txt",sep="")
-for (line in readLines(file(path_file), warn = FALSE)) {
-  print(line)
+  path_file <- paste(getwd(), fileName, sep="")
+  for (line in readLines(file(path_file, encoding = "UTF-8"), warn = FALSE)) {
+    
+    if (startsWith(line, phrase)) {
+      path <- unlist(strsplit(line, "<-"))[-1]
+      return(path)
+    }
+  }
 }
 
+# "/paths.txt" is the file where I store paths 
+# looks exaclty like the example provided ("paths_example.txt")
+
+path_raw <- assign_paths("RAW", "/paths.txt")
+path_program <- assign_paths("PROGRAM", "/paths.txt")
+
+# ----------------------------------------------------------------------------------
 
 file_list <- list.files(path, pattern="*.sas")
 raw_list <- list.files(path_raw, pattern="*.sas7bdat")
