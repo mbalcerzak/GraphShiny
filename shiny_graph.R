@@ -2,17 +2,21 @@
 library(shiny)
 library(networkD3)
 
-data(MisLinks)
-data(MisNodes)
+df <- read.csv("dataframe.csv", header=TRUE)
 
 #### Server ####
 server <- function(input, output) {
   
+  #filter_by <- input$domain
+  
   output$simple <- renderSimpleNetwork({
-    src <- c("A", "A", "A", "A", "B", "B", "C", "C", "D")
-    target <- c("B", "C", "D", "J", "E", "F", "G", "H", "I")
-    networkData <- data.frame(src, target)
-    simpleNetwork(networkData, opacity = 0.8)
+    #src <- c("A", "A", "A", "A", "B", "B", "C", "C", "D")
+    #target <- c("B", "C", "D", "J", "E", "F", "G", "H", "I")
+    #networkData <- data.frame(src, target)
+    #simpleNetwork(networkData, opacity = 0.8)
+    simpleNetwork(df, Source = "source", Target = "target",
+                  fontSize = 7, zoom = T,
+                  )
   })
   
 }
@@ -25,7 +29,7 @@ ui <- shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      radioButtons("radio", h3("Datasets"),
+      radioButtons("domain", h3("Datasets"),
                    choices = list("AttrOne" = "Attr1",
                                   "AttrTwo" = "Attr2"))
       

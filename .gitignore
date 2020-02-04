@@ -37,3 +37,6 @@ vignettes/*.pdf
 
 # my notes:
 paths.txt
+
+# final dataset
+*.csv

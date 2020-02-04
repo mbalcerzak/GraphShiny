@@ -2,6 +2,8 @@ library("rlist")
 library("purrr")
 library("stringr")
 
+NotDomain <- c("RAW","SDTM","VAL")
+
 # -------------------- read in the .txt file with paths --------------------------
 assign_paths <- function(phrase, fileName){
 
@@ -19,7 +21,7 @@ assign_paths <- function(phrase, fileName){
 # looks exaclty like the example provided ("paths_example.txt")
 
 path_raw <- assign_paths("RAW", "/paths.txt")
-path_program <- assign_paths("PROGRAM", "/paths.txt")
+path <- assign_paths("PROGRAM", "/paths.txt")
 
 # ----------------------------------------------------------------------------------
 
@@ -28,7 +30,7 @@ raw_list <- list.files(path_raw, pattern="*.sas7bdat")
 
 raw_list <- lapply(raw_list, function(x) toupper(paste("RAW.",str_replace(x, ".sas7bdat",""), sep="")))
 
-processFile <- function(path, fileName) {
+processFile <- function(path, fileName, domain) {
   filepath = paste(path, fileName, sep="")
   
   list_matches <- c()
@@ -48,15 +50,24 @@ processFile <- function(path, fileName) {
     if (!is.na(s[[1]][1])){
       list_matches <- list.append(list_matches, s)
     }
-    
   }
   
   final <- unique(unlist(list_matches, use.names = FALSE))
   close(con)
-  return(final)
+
+  domain_col <- rep(c(domain), times = length(final))
+  
+  df <- as.data.frame(list(list(final), domain_col))
+  colnames(df) <- c("target","source")
+  
+  df <- subset(df, as.character(target) != as.character(source))
+  
+  return(df)
 }
 
 lista = c()
+
+df_all <- 
 
 for (file in file_list){
   
@@ -68,8 +79,9 @@ for (file in file_list){
   if (any(domain %in% NotDomain)) { }
   else if (length(domain) > 0) {
     print(" --------------------------------------- ")
-    print(paste("SDTM.",domain,sep=""))
-    print(processFile(path, file))
+    domain <- paste("SDTM.",domain,sep="")
+    dataframe <- processFile(path, file, domain)
   }
 }
 
+#write.csv(dataframe,'dataframe.csv')
