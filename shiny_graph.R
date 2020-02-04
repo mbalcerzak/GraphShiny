@@ -25,7 +25,7 @@ server <- function(input, output) {
 
 ui <- shinyUI(fluidPage(
   
-  titlePanel("NOZOMI Datasets in Shiny networkD3"),
+  titlePanel("SDTM Datasets in Shiny networkD3"),
   
   sidebarLayout(
     sidebarPanel(
