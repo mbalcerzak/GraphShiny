@@ -1,19 +1,24 @@
 #### Load necessary packages and data ####
 library(shiny)
 library(networkD3)
+library(igraph)
+library(edgebundleR)
 
 df <- read.csv("dataframe.csv", header=TRUE)
 
 #### Server ####
 server <- function(input, output) {
   
-  #filter_by <- input$domain
+  #filter_by <- reactive({input$domain})
+  
+  #df <- df[df$source == filter_by,]
   
   output$simple <- renderSimpleNetwork({
     simpleNetwork(df, Source = "source", Target = "target",
-                  fontSize = 7, zoom = T)
+                  zoom = T, fontSize = 14,
+                  linkDistance = 100, charge = -200)
   })
-  
+
 }
 
 #### UI ####
@@ -25,12 +30,11 @@ ui <- shinyUI(fluidPage(
   sidebarLayout(
     sidebarPanel(
       radioButtons("domain", h3("Datasets"),
-                   choices = list("AttrOne" = "Attr1",
-                                  "AttrTwo" = "Attr2"))
+                   choices = list("SDTM.VS","RAW.DM"))
       
     ),
     mainPanel(
-      simpleNetworkOutput("simple")
+      simpleNetworkOutput("simple") 
     )
   )
 ))

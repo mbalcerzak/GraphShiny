@@ -8,10 +8,12 @@ NotDomain <- c("RAW","SDTM","VAL")
 assign_paths <- function(phrase, fileName){
 
   path_file <- paste(getwd(), fileName, sep="")
-  for (line in readLines(file(path_file, encoding = "UTF-8"), warn = FALSE)) {
-    
+  con <- file(path_file, encoding = "UTF-8")
+  
+  for (line in readLines(con, warn = FALSE)) {
     if (startsWith(line, phrase)) {
       path <- unlist(strsplit(line, "<-"))[-1]
+      close(con)
       return(path)
     }
   }
@@ -67,7 +69,8 @@ processFile <- function(path, fileName, domain) {
 
 lista = c()
 
-df_all <- 
+df_all <- data.frame(matrix(ncol = 2, nrow = 0))
+colnames(df_all) <- c("target","source")
 
 for (file in file_list){
   
@@ -80,8 +83,10 @@ for (file in file_list){
   else if (length(domain) > 0) {
     print(" --------------------------------------- ")
     domain <- paste("SDTM.",domain,sep="")
-    dataframe <- processFile(path, file, domain)
+    df <- processFile(path, file, domain)
+    print(df)
+    df_all <- rbind(df_all, df)
   }
 }
 
-#write.csv(dataframe,'dataframe.csv')
+write.csv(df_all,'dataframe.csv')
