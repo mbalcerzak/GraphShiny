@@ -90,3 +90,6 @@ for (file in file_list){
 }
 
 write.csv(df_all,'dataframe.csv')
+
+# TODO 
+# add a table with unique values

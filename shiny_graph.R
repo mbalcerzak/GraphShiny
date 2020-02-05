@@ -2,24 +2,37 @@
 library(shiny)
 library(networkD3)
 library(igraph)
-library(edgebundleR)
 
 df <- read.csv("dataframe.csv", header=TRUE)
 
 #### Server ####
-server <- function(input, output) {
+server <- function(session, input, output) {
   
-  #filter_by <- reactive({input$domain})
+  output$domains <- renderUI({ selectInput(inputId = "domain",
+                         label = "Select domain",
+                         choices = c("ALL", "SDTM.VS","SDTM.QS")) })
   
-  #df <- df[df$source == filter_by,]
+  newData <- reactive({
+
+    if (input$domain != "ALL") {
+      isolate({
+        
+        datadata <- df
+        datadata <- subset(datadata, source %in% input$domain)
+       
+      })
+    } else {
+      return(df)
+    }
+  })  
+  
   
   output$simple <- renderSimpleNetwork({
-    simpleNetwork(df, Source = "source", Target = "target",
-                  zoom = T, fontSize = 14,
-                  linkDistance = 100, charge = -200)
+    simpleNetwork(newData(), Source = "source", Target = "target",
+                  zoom = T, fontSize = 17,
+                  linkDistance = 150, charge = -250)
   })
-
-}
+}   
 
 #### UI ####
 
@@ -29,12 +42,11 @@ ui <- shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      radioButtons("domain", h3("Datasets"),
-                   choices = list("SDTM.VS","RAW.DM"))
+      uiOutput(outputId="domains")
       
     ),
     mainPanel(
-      simpleNetworkOutput("simple") 
+      simpleNetworkOutput("simple")
     )
   )
 ))
