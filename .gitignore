@@ -40,3 +40,6 @@ paths.txt
 
 # final dataset
 *.csv
+
+# exmaple validaiton lod
+validation_log_example.xlsx

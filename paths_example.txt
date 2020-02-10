@@ -1,5 +1,8 @@
 # Path to folder with datasets
-RAW<-C:/.../data_area
+RAW_DATA<-C:/...
 
-# Path to validation programs
-PROGRAM<-C:/.../program
+# Path to validation programs: SDTM
+SDTM_PROGRAM<-C:/...
+
+# Path to validation programs: ADaM
+ADAM_PROGRAM<-C:/...

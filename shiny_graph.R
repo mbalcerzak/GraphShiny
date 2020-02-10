@@ -5,36 +5,46 @@ library(igraph)
 
 df <- read.csv("dataframe.csv", header=TRUE)
 
-#### Server ####
+# choices = all the unique values in dataset
+# both in source and target
+
+# different colours for RAW, SDTM, ...
+
+# ------------------------- Server --------------------------------#
 server <- function(session, input, output) {
   
-  output$domains <- renderUI({ selectInput(inputId = "domain",
-                         label = "Select domain",
-                         choices = c("ALL", "SDTM.VS","SDTM.QS")) })
+  output$domains <- renderUI({ selectInput(
+                          inputId = "domain",
+                          label = "Select domain",
+                          choices = c("ALL","SDTM.VS","SDTM.QS"),
+                          selected = "ALL")})
   
   newData <- reactive({
 
-    if (input$domain != "ALL") {
-      isolate({
+    # Filter the dataset by the chosen value
+    datadata <- df
+    
+    #print(input$domain) 
+    if (!is.null(input$domain)) {
+      if (input$domain != "ALL"){
         
-        datadata <- df
-        datadata <- subset(datadata, source %in% input$domain)
-       
-      })
-    } else {
-      return(df)
-    }
+        isolate({
+          datadata <- subset(datadata, source %in% input$domain)
+        })
+      }
+    } 
+    return(datadata)
   })  
-  
   
   output$simple <- renderSimpleNetwork({
     simpleNetwork(newData(), Source = "source", Target = "target",
                   zoom = T, fontSize = 17,
-                  linkDistance = 150, charge = -250)
+                  linkDistance = 150, charge = -250,
+                  height = 500, width = 500)
   })
 }   
 
-#### UI ####
+# ---------------------------- UI ----------------------------------#
 
 ui <- shinyUI(fluidPage(
   
@@ -44,6 +54,10 @@ ui <- shinyUI(fluidPage(
     sidebarPanel(
       uiOutput(outputId="domains")
       
+      # "notify" button to send emails to programmers on main an QC side
+      
+      # "save as csv" button to get a list of all datasets used to create another one
+      
     ),
     mainPanel(
       simpleNetworkOutput("simple")
@@ -51,5 +65,5 @@ ui <- shinyUI(fluidPage(
   )
 ))
 
-#### Run ####
+# ----------------------------- RUN --------------------------------#
 shinyApp(ui = ui, server = server)
