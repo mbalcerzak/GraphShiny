@@ -28,6 +28,7 @@ paths_txt <-  "/paths.txt"  #"paths_example.txt"
 # Dataset paths
 path_raw_data <- assign_paths("RAW_DATA",paths_txt)
 path_sdtm_data <- assign_paths("SDTM_DATA", paths_txt)
+path_adam_data <- assign_paths("ADAM_DATA", paths_txt)
 
 # Program paths
 path_sdtm_program <- assign_paths("SDTM_PROGRAM", paths_txt)
@@ -50,10 +51,6 @@ datasets_f <- function(path, pattern){
   invisible(clean_list)
 }
 
-# not used yet raw - ADD
-# raw_list <- datasets_f(path_raw, "RAW.")
-# sdtm_list <- datasets_f(path_sdtm, "SDTM.")
-
 
 ### 2. Create a list of all programs in validation folder in SDTM /ADaM folders
 
@@ -61,7 +58,7 @@ program_list_sdtm <- list.files(path_sdtm_program, pattern="*.sas")
 program_list_adam <- list.files(path_adam_program, pattern="*.sas")
 
 
-### 3. Return datasets present in the validation program that are also in point 2.
+### 3. Return datasets present in the validation programs
 
 processFile <- function(path, fileName, domain, data_patterns) {
   
@@ -87,7 +84,7 @@ processFile <- function(path, fileName, domain, data_patterns) {
   domain_col <- rep(c(domain), times = length(final))
   
   df <- as.data.frame(list(list(final), domain_col))
-  colnames(df) <- c("target","source")
+  colnames(df) <- c("source", "target","group")
   
   df <- subset(df, as.character(target) != as.character(source))
   
@@ -105,7 +102,7 @@ create_dataframe <- function(program_list, program_path, pattern){
   
   lista = c()
   df_all <- data.frame(matrix(ncol = 2, nrow = 0))
-  colnames(df_all) <- c("target","source")
+  colnames(df_all) <- c("source", "target","group")
   data_patterns <- c("RAW\\.[A-Z0-9]+", "SDTM\\.[A-Z0-9]+", "ADAM\\.[A-Z0-9]+")
   
   for (file in program_list){
@@ -145,19 +142,61 @@ adam_df <- create_dataframe(program_list_adam, path_adam_program, "ADAM.")
 
 df_all <- rbind(sdtm_df, adam_df)
 
+### 4b. Add groups to have different colours
+
+check_group <- function(x){
+
+  x_split <- unlist(strsplit(x[1][1], "[.]"))
+  type <- x_split[1]
+ 
+  if (type == "RAW"){
+    return (1)
+  } else if (type == "SDTM"){
+    return (2)
+  } else if (type == "ADAM"){
+    return (3)
+  } else {
+    return (0)
+  }
+}
+
+df_all$group <- apply(df_all, 1, FUN = function(x) check_group(x))
+
+### 5. Get unique list of names of all datasets found
+
+get_all_names <- function(){
+  source_in_list <- as.list(levels(df_all$source))
+  target_in_list <- as.list(levels(df_all$target))
+  
+  every_dataset <- unique(c(source_in_list, target_in_list))
+  every_dataset <- sort(unlist(every_dataset))
+  
+  invisible(every_dataset)
+}
+
+unique <- get_all_names()
+
+### 6. Check if all exisitng datasets are used in programs
+
+# list of all datasets present in study folders
+raw_list <- datasets_f(path_raw_data, "RAW.")
+sdtm_list <- datasets_f(path_sdtm_data, "SDTM.")
+adam_list <- datasets_f(path_adam_data, "ADAM.")
+
 # -------------- write the output into a csv file   -------------------------
 
 
-#write.csv(df_all,'dataframe.csv', sheetName='dataframe', row.names=FALSE)
-
-# not used datasets 
-#write.csv(not_used,'dataframe.csv', sheetName='not_used', row.names=FALSE)
+write.csv(df_all, 'dataframe.csv', row.names=FALSE)
 
 # unique names of all datasets to pu in the drop-down list in Shiny
-#write.csv(unique,'dataframe.csv', sheetName='unique', row.names=FALSE)
+write.csv(unique, 'unique_names.csv', row.names=FALSE)
+
+# not used datasets 
+#write.csv(not_used,'not_used.csv', row.names=FALSE)
+
+
 
 # TODO 
-# add a table with unique values
 # create a second dataframe to be saved for programmer to see (csv)
 # SDTM.VS | RAW.VS, RAW.DM, SDTM.DM, ...
 
