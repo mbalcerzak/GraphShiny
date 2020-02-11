@@ -29,7 +29,8 @@ server <- function(session, input, output) {
       if (input$domain != "ALL"){
         
         isolate({
-          datadata <- subset(datadata, source %in% input$domain)
+          datadata <- subset(datadata, source %in% input$domain |
+                                       source %in% input$target)
         })
       }
     } 
