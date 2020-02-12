@@ -2,23 +2,12 @@
 library(shiny)
 library(networkD3)
 library(igraph)
-library(visNetwork)
 
 df <- read.csv("dataframe.csv", header=TRUE)
-colnames(df) <- c("from","to")
 
 namesdf <- read.csv("unique_names.csv", header=TRUE)
 
-names <- c("ALL", levels(unlist(namesdf$x)))
-
-
-visNetwork(nodes = namesdf, edges = df, width = "100%")
-
-
-# %>% 
-#   visEdges(arrows = "from") %>% 
-#   visHierarchicalLayout() 
-
+names <- c("ALL", levels(unlist(namesdf$id)))
 
 # ------------------------- Server --------------------------------#
 server <- function(session, input, output) {
@@ -39,28 +28,23 @@ server <- function(session, input, output) {
       if (input$domain != "ALL"){
         
         isolate({
-          datadata <- subset(datadata, from %in% input$domain |
-                                       to %in% input$domain)
+          datadata <- subset(datadata, source %in% input$domain |
+                                       target %in% input$domain)
         })
       }
     } 
     return(datadata)
   })  
   
-  # output$network <- renderSimpleNetwork({
-  #   simpleNetwork(newData(), Source = "source", Target = "target",
-  #                 zoom = T, fontSize = 17,
-  #                 linkDistance = 150, charge = -250,
-  #                 height = 700, width = 500)
-  # })
+  output$network <- renderSimpleNetwork({
+    simpleNetwork(newData(), Source = "source", Target = "target",
+                  zoom = T, fontSize = 17,
+                  linkDistance = 150, charge = -250,
+                  height = 700, width = 500)
+  })
   
-  output$network <- renderVisNetwork({visNetwork(nodes = names, 
-                                                 edges = newData(), 
-                                                 width = "100%") %>% 
-                                      visEdges(arrows = "from") %>% 
-                                      visHierarchicalLayout()  
-                                    #,visOptions(nodesIdSelection = TRUE)
-                                      })
+  output$table <- renderDataTable(newData())
+  
 }   
 
 # ---------------------------- UI ----------------------------------#
@@ -73,13 +57,15 @@ ui <- shinyUI(fluidPage(
     sidebarPanel(
       uiOutput(outputId="domains")
       
-      #h3(textOutput("Unused datasets:"))
+      
       
       # "save as csv" button to get a list of all datasets used to create another one
       
     ),
     mainPanel(
-      simpleNetworkOutput("network")
+      simpleNetworkOutput("network", height = "800px"),
+      h5("Used datasets:"),
+      dataTableOutput('table')
     )
   )
 ))

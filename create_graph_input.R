@@ -2,6 +2,8 @@ library("rlist")
 library("purrr")
 library("stringr")
 
+#TODO check if line is not commented
+
 NotDomain <- c("VAL","MASTER","SDTM","ADAM","ARCHIVE")
 #NotDomain <- c()
 
@@ -84,9 +86,9 @@ processFile <- function(path, fileName, domain, data_patterns) {
   domain_col <- rep(c(domain), times = length(final))
   
   df <- as.data.frame(list(list(final), domain_col))
-  colnames(df) <- c("source", "target","group")
+  colnames(df) <- c("from", "to")
   
-  df <- subset(df, as.character(target) != as.character(source))
+  df <- subset(df, as.character(from) != as.character(to))
   
   close(con)
   return(df)
@@ -102,7 +104,7 @@ create_dataframe <- function(program_list, program_path, pattern){
   
   lista = c()
   df_all <- data.frame(matrix(ncol = 2, nrow = 0))
-  colnames(df_all) <- c("source", "target","group")
+  colnames(df_all) <- c("from", "to")
   data_patterns <- c("RAW\\.[A-Z0-9]+", "SDTM\\.[A-Z0-9]+", "ADAM\\.[A-Z0-9]+")
   
   for (file in program_list){
@@ -149,32 +151,27 @@ check_group <- function(x){
   x_split <- unlist(strsplit(x[1][1], "[.]"))
   type <- x_split[1]
  
-  if (type == "RAW"){
-    return (1)
-  } else if (type == "SDTM"){
-    return (2)
-  } else if (type == "ADAM"){
-    return (3)
-  } else {
-    return (0)
-  }
+  if (type %in% c("RAW","SDTM","ADAM")){ return (type)}
 }
-
-df_all$group <- apply(df_all, 1, FUN = function(x) check_group(x))
 
 ### 5. Get unique list of names of all datasets found
 
 get_all_names <- function(){
-  source_in_list <- as.list(levels(df_all$source))
-  target_in_list <- as.list(levels(df_all$target))
+  source_in_list <- as.list(levels(df_all$from))
+  target_in_list <- as.list(levels(df_all$to))
   
   every_dataset <- unique(c(source_in_list, target_in_list))
-  every_dataset <- sort(unlist(every_dataset))
+  s <- sort(unlist(every_dataset))
   
-  invisible(every_dataset)
+  df <- data.frame(matrix(unlist(s), nrow=length(s), byrow=T))
+  colnames(df) <- c("id")
+  
+  invisible(df)
 }
 
 unique <- get_all_names()
+
+unique$group <- apply(unique, 1, FUN = function(id) check_group(id))
 
 ### 6. Check if all exisitng datasets are used in programs
 
