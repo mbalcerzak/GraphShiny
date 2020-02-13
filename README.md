@@ -3,7 +3,7 @@
 The flow of clinical trials data can quickly become complicated. The dashboard presented can help programmers and project managers understand the data flow and quickly catch discrepancies
 
 The dashboard can help answer such questions as:  
-- What datasets are used to create SDTM VS dataset on our study?
+- What datasets are used to create each SDTM dataset on our study?
 - Are all raw datasets used?
 - Who should I notify if the underlying dataset changes?  
 
