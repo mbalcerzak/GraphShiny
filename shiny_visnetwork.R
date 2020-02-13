@@ -9,6 +9,7 @@ library(DT)
 # edges longer
 # add validation log part
 # change colors: gradation + no red
+# presentation with dataflow chart
 
 masked <- TRUE
 
