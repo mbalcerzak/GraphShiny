@@ -9,8 +9,14 @@ library(DT)
 # edges longer
 # add validation log part
 
-df <- as.data.frame(read.csv("dataframe.csv", header=TRUE))
-namesdf <- as.data.frame(read.csv("unique_names.csv", header=TRUE))
+
+# not masked
+# df <- as.data.frame(read.csv("dataframe.csv", header=TRUE))
+# namesdf <- as.data.frame(read.csv("unique_names.csv", header=TRUE))
+
+# masked
+df <- as.data.frame(read.csv("dataframe_masked.csv", header=TRUE))
+namesdf <- as.data.frame(read.csv("unique_masked.csv", header=TRUE))
 
 names <- c("ALL", levels(unlist(namesdf$id)))
 
@@ -109,7 +115,7 @@ server <- function(session, input, output) {
 
 ui <- shinyUI(fluidPage(
   
-  titlePanel("SDTM Datasets in Shiny networkD3"),
+  titlePanel("Clinical Datasets graph"),
 
   sidebarLayout(
     sidebarPanel(

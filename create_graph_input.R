@@ -197,5 +197,5 @@ write.csv(unique, 'unique_names.csv', row.names=FALSE)
 # create a second dataframe to be saved for programmer to see (csv)
 # SDTM.VS | RAW.VS, RAW.DM, SDTM.DM, ...
 
-# get an inpit dataset with names of programmers on main/QC side
+# get an input dataset with names of programmers on main/QC side
 # to connect that info later
