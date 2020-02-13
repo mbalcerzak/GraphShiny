@@ -8,18 +8,25 @@ library(DT)
 # TODO: make nodes smaller, labels bigger
 # edges longer
 # add validation log part
+# change colors: gradation + no red
+
+masked <- TRUE
 
 
-# not masked
-# df <- as.data.frame(read.csv("dataframe.csv", header=TRUE))
-# namesdf <- as.data.frame(read.csv("unique_names.csv", header=TRUE))
-
-# masked
-df <- as.data.frame(read.csv("dataframe_masked.csv", header=TRUE))
-namesdf <- as.data.frame(read.csv("unique_masked.csv", header=TRUE))
+if (masked == TRUE){
+  
+  # masked
+  df <- as.data.frame(read.csv("dataframe_masked.csv", header=TRUE))
+  namesdf <- as.data.frame(read.csv("unique_masked.csv", header=TRUE))
+  
+} else {
+  
+  # not masked
+  df <- as.data.frame(read.csv("dataframe.csv", header=TRUE))
+  namesdf <- as.data.frame(read.csv("unique_names.csv", header=TRUE))
+}
 
 names <- c("ALL", levels(unlist(namesdf$id)))
-
 
 # ------------------------- Server --------------------------------#
 server <- function(session, input, output) {
@@ -57,7 +64,6 @@ server <- function(session, input, output) {
         
         get_names <- newdf()
         
-        #both cols into list
         from_in_list <- as.list(get_names$from)
         to_in_list <- as.list(get_names$to)
         
