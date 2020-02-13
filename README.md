@@ -16,3 +16,7 @@ Selecting a single node makes graph filter underlying dataset and show connectio
 
 #### Graph showing connections only for SDTM.MM
 <img  width="743" height="611" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/shiny_graph_mm.png">
+
+
+#### Flow of data going into the Shiny App
+<img  width="575" height="475" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/data_flow.png">
