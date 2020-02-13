@@ -19,4 +19,4 @@ Selecting a single node makes graph filter underlying dataset and show connectio
 
 
 #### Flow of data going into the Shiny App
-<img  width="575" height="475" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/data_flow.png">
+<img  width="805" height="665" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/data_flow.png">
