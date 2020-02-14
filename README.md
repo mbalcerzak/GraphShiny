@@ -33,7 +33,7 @@ While the app is starting the graph shows all the datasets in the input data
 
 Selecting a single node makes graph filter underlying dataset and show connections only for that dataset. It also outputs a reactive table where we can see the relations in a tabular form. User can download the dataset any time.
 
-<img  width="743" height="611" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/shiny_graph_mm.png">
+<img  width="520" height="427" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/shiny_graph_mm.png">
 
 
 ## Flow of data going into the Shiny App
