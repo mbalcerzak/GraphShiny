@@ -15,13 +15,13 @@ The flow of clinical trials data can quickly become complicated. The dashboard p
 
 1. Program **create_graph_input.R** checks SAS programs using regular expressions (REGEX). Program looks for mentions of "RAW", "SDTM" and "ADAM" to create a list of all datasets used while creating the program.   
 2. It outputs two dataframes:  
- - one with **nodes** (unique list of all the datasets names found)  
- - one with **edges** (connections between the datasets e.g. RAW.DM --> SDTM.DM ...)  
+ * one with **nodes** (unique list of all the datasets names found)  
+ * one with **edges** (connections between the datasets e.g. RAW.DM --> SDTM.DM ...)  
  3. For the purpose of this repository I am masking the data using a Python script (**masking.py**)  
  4. R Shiny script reads in te two datasets and creates a graph using visNetwork library  
  5. The user can:
-  - filter the dataset if he/she wants to see only a specific dataset
-  - download the filtered (or not) dataset with edges  
+  * filter the dataset if he/she wants to see only a specific dataset
+  * download the filtered (or not) dataset with edges  
 
 ## Graph showing connections between all the datasets
 
