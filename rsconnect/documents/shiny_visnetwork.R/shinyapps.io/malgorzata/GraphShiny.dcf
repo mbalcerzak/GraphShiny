@@ -1,0 +1,13 @@
+name: GraphShiny
+title: GraphShiny
+username:
+account: malgorzata
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1967789
+bundleId: 2899251
+url: https://malgorzata.shinyapps.io/GraphShiny/
+when: 1584646968.54323
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .gitattributes|.RData|create_graph_input.R|dataframe_masked.csv|LICENSE|masking.csv|masking.py|paths.txt|paths_example.txt|README.md|shiny_igraph.R|unique_masked.csv|img/data_flow.png|img/shiny_graph.png|img/shiny_graph_mm.png|img/shiny_graph_select.png

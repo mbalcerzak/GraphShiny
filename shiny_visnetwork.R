@@ -11,8 +11,7 @@ library(DT)
 # change colors: gradation + no red
 # presentation with dataflow chart
 
-masked <- TRUE
-
+masked <- FALSE
 
 if (masked == TRUE){
   
@@ -96,9 +95,12 @@ server <- function(session, input, output) {
                                         shadow = list(enabled = TRUE, size = 10),
                                         font = list( size = 20)
                                       ) %>%
-                                      visEdges(length = 25) #%>%
-                                      #visEvents(selectNode = ) https://stackoverflow.com/questions/41018899/get-selected-node-data-from-visnetwork-graph-without-actionbutton
-                                      })
+                                      visEdges(length = 25) %>%
+                                      visEvents(click = "function(nodes){
+                                                    Shiny.onInputChange('domain', nodes.nodes[0]);
+                                                    ;}"
+                                      )
+    })
   
   
   output$table <- renderDT(
@@ -115,6 +117,11 @@ server <- function(session, input, output) {
       write.csv(data, file, row.names = FALSE)
     }
   )
+
+  output$shiny_return <- renderPrint({
+    visNetworkProxy("network") %>%
+      visNearestNodes(target = input$click)
+  })
   
 }   
 

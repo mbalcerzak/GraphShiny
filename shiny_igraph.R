@@ -29,8 +29,8 @@ server <- function(session, input, output) {
       if (input$domain != "ALL"){
         
         isolate({
-          datadata <- subset(datadata, source %in% input$domain |
-                                       target %in% input$domain)
+          datadata <- subset(datadata, from %in% input$domain |
+                                       to %in% input$domain)
         })
       }
     } 
@@ -38,13 +38,13 @@ server <- function(session, input, output) {
   })  
   
   output$network <- renderSimpleNetwork({
-    simpleNetwork(newData(), Source = "source", Target = "target",
+    simpleNetwork(newData(), Source = "from", Target = "to",
                   zoom = T, fontSize = 17,
                   linkDistance = 150, charge = -250,
                   height = 700, width = 500)
   })
   
-  output$table <- renderDataTable(newData())
+  #output$table <- renderDataTable(newData())
   
 }   
 
@@ -56,17 +56,17 @@ ui <- shinyUI(fluidPage(
   
   sidebarLayout(
     sidebarPanel(
-      uiOutput(outputId="domains")
-      
+      uiOutput(outputId="domains"),
+      #h5("Used datasets:"),
+      #dataTableOutput('table')
       
       
       # "save as csv" button to get a list of all datasets used to create another one
       
     ),
     mainPanel(
-      simpleNetworkOutput("network", height = "800px"),
-      h5("Used datasets:"),
-      dataTableOutput('table')
+      simpleNetworkOutput("network", height = "800px")
+      
     )
   )
 ))
