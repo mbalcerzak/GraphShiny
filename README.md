@@ -2,6 +2,9 @@
 
 The flow of clinical trials data can quickly become complicated. The dashboard presented can help programmers and project managers understand the data flow and quickly catch discrepancies
 
+<img  width="885" height="655" src="https://github.com/mbalcerzak/GraphShiny/blob/master/img/clinical_graph.gif">
+
+
 **The dashboard can help with:**
 - visually exploring dataset connections  
 - ensuring that all main/QC programmers get notified if the underlying dataset changes  
